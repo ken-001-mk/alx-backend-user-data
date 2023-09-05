@@ -86,3 +86,14 @@ class BasicAuth(Auth):
         auth_token = self.decode_base64_authorization_header(b64_auth_token)
         email, password = self.extract_user_credentials(auth_token)
         return self.user_object_from_credentials(email, password)
+    
+    def extract_user_credentials(self, decoded_base64_authorization_header):
+        try:
+            credentials = decoded_base64_authorization_header.decode("utf-8")
+            """Split the credentials at the first colon to
+            separate username and password
+            """
+            username, password = credentials.split(":", 1)
+            return (username, password)
+        except ValueError:
+            return None

@@ -2,7 +2,7 @@
 
 """API authentication"""
 
-from flask import requests
+from flask import request
 from typing import List, TypeVar
 import fnmatch
 
@@ -35,4 +35,17 @@ class auth:
         """ Method to get user from request.
         """
         return None
-
+    
+    def require_auth(self, path, excluded_paths):
+        """Check if the path matches any of the excluded paths
+        """
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith("*"):
+                """If the excluded path ends with "*", check if
+                it's a prefix of the path
+                """
+                if path.startswith(excluded_path[:-1]):
+                    return False
+            elif path == excluded_path:
+                return False
+        return True
