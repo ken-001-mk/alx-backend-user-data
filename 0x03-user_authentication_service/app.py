@@ -2,6 +2,9 @@
 
 from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
+import logging
+
+logging.disable(logging.WARNING)
 
 AUTH = Auth()
 
@@ -58,7 +61,7 @@ def profile() -> str:
   session_id = request.cookies.get('session_id')
   user = AUTH.get_user_from_session_id(session_id)
   if user:
-    return jsonify({"email": user.email}), 200
+    return jsonify({"email": user.email})
   else:
     abort(403)
 

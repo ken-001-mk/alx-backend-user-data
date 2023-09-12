@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
 
 import bcrypt
+from typing import Union
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
 import uuid
+import logging
 
+logging.disable(logging.WARNING)
+
+
+def hash_password(self, password: str) -> str:
+    """Method that takes in a password string arguments and returns bytes
+    """
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+def generate_uuid(self) -> str:
+    """Method that returns a string representation of a new UUID
+    """
+    new_uuid = uuid.uuid4()
+    return str(new_uuid)
 class Auth:
   """Auth class to interact with the authentication database.
   """
@@ -13,10 +28,6 @@ class Auth:
   def __init__(self):
     self._db = DB()
 
-  def hashet_password(self, password: str) -> str:
-    """Method that takes in a password string arguments and returns bytes
-    """
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
   
   def register_user(self, email: str, password: str) -> User:
     """Method that takes mandatory email and password string arguments
@@ -38,11 +49,7 @@ class Auth:
     except NoResultFound:
       return False
   
-  def generate_uuid(self) -> str:
-    """Method that returns a string representation of a new UUID
-    """
-    new_uuid = uuid.uuid4()
-    return str(new_uuid)
+  
   
   def create_session(self, email: str) -> str:
     """Method that takes an email string argument and returns
@@ -56,7 +63,7 @@ class Auth:
     except NoResultFound:
       return None
   
-  def get_user_from_session_id(self, session_id: str) -> str:
+  def get_user_from_session_id(self, session_id: str) -> Union[str, None]:
     """Method that takes a single session_id string argument
     and returns the corresponding User or None
     """

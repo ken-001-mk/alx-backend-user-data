@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -8,6 +9,9 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from user import Base, User
+from typing import Dict
+
+logging.disable(logging.WARNING)
 
 Base = declarative_base()
 class DB:
@@ -39,7 +43,7 @@ class DB:
     self._session.commit()
     return new_user
   
-  def find_user_by(self, **kwargs) -> User:
+  def find_user_by(self, **kwargs: Dict[str, str]) -> User:
     """Method that returns the first row found in the users table
     as filtered by the methods input arguments
     """
